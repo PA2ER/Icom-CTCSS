@@ -1,0 +1,40 @@
+NOTE: On boards dated 3-2024 or after, some components have a different part designation.
+These newer part numbers are shown below in brackets [ ].
+Lettered capacitors were converted to C(number).
+Lettered resistors are simply a single number in a square box.
+
+
+350 Hz High Pass Filter configuration - Stand alone CTCSS Filter:
+
+PLF-15 printed circuit board
+U1 - TL062BCP - High-Performance J-FET Input Operational Amplifier
+4 pin header socket or pins.
+8 pin gold-plated machine IC socket.  Align the notch to match the silkscreen.
+C1 - NOT Assigned on boards dated before 3-2024.
+C1 on newer boards - see "G" below.
+C2 - 1uF (105)
+C3 - 220uF 16v electrolytic (observe polarity) (see notes below on installation)
+C4 - 1uF (105)
+R1 - 1k - 1/4 w - 5% (brown - black - red - gold)
+R2 - 1k - 1/4 w - 5% (brown - black - red - gold)
+A [3]  - 8.2k - 5% (gray - red - red - gold)
+B [4]  - 2.2k - 5% (red - red - red - gold)
+C [C7] - 0.1uF (104)
+D [C8] - 0.1uF (104)
+E [5]  - 5.6k - 5% (green - blue - red - gold)
+F [6]  - 39k - 5% (orange - white - orange - gold)
+G [C1] - 0.068uF (683 or 0.068) (red)
+H [C5] - 0.068uF (683 or 0.068) (red)
+I [C6] - 0.068uF (683 or 0.068) (red)
+J [7]  - 2.2k - 5% (red - red - red - gold)
+
+
+All components mount flush against the printed circuit board by bending the
+leads close to the body of the part.
+
+C3 is installed making sure you place the positive lead into the square hole and the
+minus or negatve lead into the round hole.  The capacitor has a band that plainly
+marks the negative (minus) lead.  The board has a + sign silkscreened to show the
+placement of the positive lead and the capacitors proper orientation.
+
+Installation of the IC socket is optional - but recommended.
