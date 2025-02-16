@@ -13,11 +13,6 @@ bool decodeCTCSS(float targetFrequency);
 #define PTT_BUTTON 2  // Pin connected to the PTT button
 const int latchPin = 4;  // STCP (Storage Register Clock Input) - Latch signal
 
-// Shift Register Control Pins
-/*#define SERIAL_DATA 11  // SER (serial data input)
-#define CLOCK 12        // SRCLK (shift register clock)
-#define LATCH 13        // RCLK (latch/register clock)*/
-
 // Decode Indicator Output
 #define DECODE_INDICATOR 8  // Pin for decode indicator (e.g., LED)
 
@@ -74,11 +69,6 @@ void setup() {
   // Initialize PTT button as input
   pinMode(PTT_BUTTON, INPUT);
 
-  // Initialize shift register control pins as outputs
-  /*pinMode(SERIAL_DATA, OUTPUT);
-  pinMode(CLOCK, OUTPUT);
-  pinMode(LATCH, OUTPUT);*/
-
   // Initialize decode indicator as output
   pinMode(DECODE_INDICATOR, OUTPUT);
 
@@ -92,15 +82,13 @@ void setup() {
 }
 
 void loop() {
-  // Read the serial input and get the selected CTCSS code
   prefCode = selectedCode;
+  // Read the serial input and get the selected CTCSS code from ctcssCodes array
   selectedCode = readShiftRegister();
-  //selectedCode = 5;
 
   // Check if the PTT button is pressed
   if (digitalRead(PTT_BUTTON) == HIGH && selectedCode != 0 ) {
     // PTT button is pressed - transmit selected CTCSS tone as a sine wave
-    //generateSineWave(ctcssFrequencies[selectedCode - 1]);
     digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator if no code is selected
     generateSineWave(selectedCode);
     if (selectedCode != prefCode) {
