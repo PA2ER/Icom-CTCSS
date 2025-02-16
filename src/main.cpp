@@ -96,8 +96,7 @@ void loop() {
       Serial.println(ctcssFrequencies[selectedCode]);
     }
   } else {
-    // PTT button is not pressed - stop transmitting and decode incoming audio
-    //CtcssTone.tone_off();  // Stop sine wave
+    // PTT button is not pressed - start decode incoming audio
     if (selectedCode != 0) {
       bool isDecoded = decodeCTCSS(ctcssFrequencies[selectedCode - 1]);
       digitalWrite(DECODE_INDICATOR, isDecoded ? HIGH : LOW);  // Turn on/off decode indicator

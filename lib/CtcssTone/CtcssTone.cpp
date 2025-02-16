@@ -115,7 +115,7 @@ void CtcssToneClass::Setup_timer2( void )
   sbi (TCCR2B, CS20);
   cbi (TCCR2B, CS21);
   cbi (TCCR2B, CS22);
-  // Timer2 ouput A PWM Mode set to Phase Correct PWM
+  // Timer2 ouput B PWM Mode set to Phase Correct PWM
   cbi (TCCR2A, COM2B0);  // clear Compare Match
   sbi (TCCR2A, COM2B1);
  
@@ -156,7 +156,7 @@ void CtcssToneClass::init ( void )
   current_tone    = 0;
   tone_state      = tone_state_off;
 
-  pinMode( 3, OUTPUT);      // pin11 = PWM output / frequency output (PORTB 3), CTCSS
+  pinMode( 3, OUTPUT);      // pin3 = PWM output / frequency output (PORTB 3), CTCSS
 
   // Initialise timer 2
   CtcssTone.Setup_timer2();

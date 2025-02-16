@@ -1,6 +1,6 @@
 /*
  * Include file to control the generation of CTCSS tones using timer 2.
- * The output of the timer 2 is at pin D11.
+ * The output of the timer 2 is at pin D3.
  *
  * Copyright: 2010 PE1CID
  * Version:
