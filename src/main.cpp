@@ -1,17 +1,17 @@
 /*
-With this code I try to attemd to program a Arduino nano, to use in older transcievers, where te CTCCC board is no longer avalable.
-The goal is to let the arduino communicate with the transciever, as it would with factory CTCSS board.
-I found out that Icom, yaesu, and Kenwood, all use a 8bit shift register ic, and a CTCSS encoder/decoder ic like the FX365, that are obsolete.
+With this code, I try to attempted to program a Arduino nano, to use in older transceivers, where the CTCCC board is no longer available.
+The goal is to let the Arduino communicate with the transceiver, as it would with a factory CTCSS board.
+I found out that Icom, yaesu, and Kenwood, all use a 8 bit shift register IC, and a CTCSS encoder/decoder IC like the FX365, that are obsolete.
 
-I used the library written by PE1CID,that I slidely modified, to genarate the subaudio tone. (CtcssTone)
+I used the library written by PE1CID,that I slightly modified, to generate the sub-audio tone. (CtcssTone)
 
 Pins used:
 PIN 2 = PTT_BUTTON to switch from receive to transmit
-PIN 3 = PWM_OUTPUT output that generates te subaudio tone
-PIN 4 = latchPin Input of the latch from transciever
+PIN 3 = PWM_OUTPUT output that generates the sub-audio tone
+PIN 4 = latchPin Input of the latch from the transceiver
 PIN 8 = DECODE_INDICATOR goes high if CTCSS code is decoded
-PIN 12 = Serial input from tracsiever
-PIN 14 = A0 Subaudio tone input, needs 260Hz lowpass filter
+PIN 12 = Serial input from transceiver
+PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter
 */
 
 #include <Arduino.h>
