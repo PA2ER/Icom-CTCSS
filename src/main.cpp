@@ -10,7 +10,7 @@ PIN 2 = PTT_BUTTON to switch from receive to transmit
 PIN 3 = PWM_OUTPUT output that generates the sub-audio tone
 PIN 4 = latchPin Input of the latch from the transceiver
 PIN 8 = DECODE_INDICATOR goes high if CTCSS code is decoded
-PIN 12 = Serial input from transceiver
+PIN 11 = Serial input from transceiver
 PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter
 */
 
