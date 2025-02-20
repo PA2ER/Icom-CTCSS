@@ -106,7 +106,7 @@ void loop() {
   // Check if the PTT button is pressed
   if (digitalRead(PTT_BUTTON) == HIGH && selectedCode != 0 ) {
     // PTT button is pressed - transmit selected CTCSS tone as a sine wave
-    digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator if no code is selected
+    digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator
     generateSineWave(selectedCode);
     if (selectedCode != prefCode) {
       Serial.print("Transmitting CTCSS tone: ");

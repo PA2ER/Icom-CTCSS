@@ -183,7 +183,7 @@ void CtcssToneClass::tone_on ( int tone_id )
     // Enter the tone values
     tword_m = tone_defs[tone_id];
 
-    // Start the tone by enabling interrupt timer3
+    // Start the tone by enabling interrupt timer2
     sbi ( TIMSK2, TOIE2 );              // enable Timer2 Interrupt
   }
   else
