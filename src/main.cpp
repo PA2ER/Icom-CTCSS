@@ -56,9 +56,7 @@ const uint8_t ctcssCodes[] = {
 };
 
 // Initialize all bits to 0
-byte dummyByte = 0b00000000;
-byte shiftRegister = 0b00000000;
-
+volatile byte shiftRegister = 0b00000000;
 
 // FFT Settings
 #define SAMPLES 128             // Must be a power of 2
