@@ -9,9 +9,9 @@ Pins used:
 PIN 2 = PTT_BUTTON to switch from receive to transmit
 PIN 3 = PWM_OUTPUT output that generates the sub-audio tone
 PIN 8 = DECODE_INDICATOR goes high if CTCSS code is decoded
-PIN 10 = latchPin Input of the latch from the transceiver
-PIN 11 = MOSI SPI data from transceiver
-PIN 13 = SCK SPI clock serial clock from transceiver
+PIN 10 = ChipSelect Input for TSTB from the transceiver
+PIN 11 = MOSI SPI DATA from transceiver
+PIN 13 = SCK SPI clock serial clock for CK from transceiver
 PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter
 */
 
@@ -28,7 +28,7 @@ bool decodeCTCSS(float targetFrequency);
 
 // PTT Button
 #define PTT_BUTTON 2  // Pin connected to the PTT button
-#define latchPin 4  // STCP (Storage Register Clock Input) - Latch signal
+#define CS_PIN    4  // D10 = pin16 = PortB.4
 #define SCK_PIN   13  // D13 = pin19 = PortB.5
 #define MOSI_PIN  11  // D11 = pin17 = PortB.3
 
@@ -56,6 +56,7 @@ const uint8_t ctcssCodes[] = {
 };
 
 // Initialize all bits to 0
+byte dummyByte = 0b00000000;
 byte shiftRegister = 0b00000000;
 
 
@@ -77,15 +78,15 @@ int prefCode = 0;
 int numCodes = sizeof(ctcssCodes) / sizeof(ctcssCodes[0]);
 
 void setup() {
-  // Latch pin is an INPUT
-  pinMode(latchPin, INPUT); 
+  // Set SPI pins as input
+  pinMode(CS_PIN, INPUT_PULLUP);
+  pinMode(SS, INPUT);
   pinMode(SCK_PIN, INPUT);
   pinMode(MOSI_PIN, INPUT);
 
   // Initialize SPI in slave mode
-  //SPCR = (1<<SPE)|(0<<DORD)|(0<<MSTR)|(1<<CPOL)|(0<<CPHA)|(1<<SPR1)|(1<<SPR0); // SPI on
-  //SPCR |= _BV(SPE); // Enable SPI in slave mode
-  //SPCR |= _BV(SPIE); // Enable SPI interrupt
+  SPCR = (1<<SPE)|(0<<DORD)|(0<<MSTR)|(1<<CPOL)|(0<<CPHA)|(0<<SPR1)|(0<<SPR0); // SPI on
+  SPCR |= _BV(SPIE); // Enable SPI interrupt
 
   TCCR1A = _BV(COM1A1) | _BV(WGM10);  // Set PWM mode and output
   TCCR1B = _BV(CS12);  // Set prescaler to 1 (no prescaling)
@@ -114,14 +115,18 @@ void loop() {
   selectedCode = readShiftRegister();
 
   // Check if the PTT button is pressed
-  if (digitalRead(PTT_BUTTON) == HIGH && selectedCode != 0 ) {
-    // PTT button is pressed - transmit selected CTCSS tone as a sine wave
-      digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator
+  if (digitalRead(PTT_BUTTON) == HIGH && selectedCode != 0 ) {  // PTT button is pressed - transmit selected CTCSS tone as a sine wave
+    digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator
+    if (selectedCode == 0) {
+      CtcssTone.tone_off();
+      Serial.println("Tone is off");
+    } else {
       generateSineWave(selectedCode);
-    if (selectedCode != prefCode) {
-      Serial.print("Transmitting CTCSS tone: ");
-      Serial.println(ctcssFrequencies[selectedCode]);
-    }
+      if (selectedCode != prefCode) {
+        Serial.print("Transmitting CTCSS tone: ");
+        Serial.println(ctcssFrequencies[selectedCode]);
+      }
+    } 
   } else {
     // PTT button is not pressed - start decode incoming audio
     if (selectedCode != 0) {
@@ -134,33 +139,35 @@ void loop() {
 }
 
 // SPI interrupt service routine
-/*ISR(SPI_STC_vect) {
+ISR(SPI_STC_vect) {
   // Read the received data from the SPI Data Register (SPDR)
   shiftRegister = SPDR;
-
-  // Print the received data to the Serial Monitor for debugging (optional)
-  //Serial.print("Received Data: ");
-  //Serial.println(shiftRegister, DEC);
-}*/
+  delayMicroseconds(20);
+  /*//while (digitalRead(CS_PIN)==0) {} // wait until SlaveSelect goes High (active)
+  selectedCode = 0;
+    for (int i =0; i < numCodes; i++) {
+      if (shiftRegister == ctcssCodes[i]) {
+        selectedCode = i;
+        Serial.print("Code: ");
+        Serial.println(selectedCode, DEC);
+        while (digitalRead(CS_PIN)==1) {} // wait until SlaveSelect goes High (active)
+        break;
+      }
+    }*/
+}
 
 int readShiftRegister() {
-  SPCR = (1<<SPE)|(0<<DORD)|(0<<MSTR)|(1<<CPOL)|(1<<CPHA)|(1<<SPR1)|(1<<SPR0); // SPI on
-  while(!(SPSR & (1<<SPIF))) ; // SPIF bit set when 8 bits received
-  shiftRegister = SPDR;
-  SPCR = (0<<SPE)|(0<<DORD)|(0<<MSTR)|(1<<CPOL)|(1<<CPHA)|(1<<SPR1)|(1<<SPR0);  // SPI off
-  while (digitalRead(SS)==0) {} // wait until SlaveSelect goes low (active)
+  while (digitalRead(SS)==1) {} // wait until SlaveSelect goes High (active)
   int code = 0;
-  if (shiftRegister >= 0) {
     for (int i =0; i < numCodes; i++) {
       if (shiftRegister == ctcssCodes[i]) {
         code = i;
-        Serial.print("Code: ");
-        Serial.println(shiftRegister, DEC);
+        //Serial.print("Code: ");
+        //Serial.println(code, DEC);
         break;
       }
     }
-  }
-  return code;  // Returns a frequentie value between 0 and 250.3 Hz
+return code;  // Returns a frequentie value between 0 and 250.3 Hz
 }
 
 void generateSineWave(int toneout) {

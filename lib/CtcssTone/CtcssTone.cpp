@@ -175,7 +175,7 @@ void CtcssToneClass::tone_on ( int tone_id )
   // Switch off current tone
   cbi ( TIMSK2, TOIE2 );              // disable Timer2 Interrupt
 
-  if ( tone_id <= 250.3 )
+  if ( tone_id >= 1 && tone_id <= 250.3 )
   {
     current_tone = tone_id;
     tone_state   = tone_state_on;
@@ -192,6 +192,7 @@ void CtcssToneClass::tone_on ( int tone_id )
     current_tone = 0;
     tone_state   = tone_state_off;
     tword_m      = tone_defs[0];
+    tone_off ();
   }
 }
 
