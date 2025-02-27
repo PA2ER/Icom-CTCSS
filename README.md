@@ -24,10 +24,10 @@ Latch to next bust of always 192 (Fig5) = 22.2 uSec.<BR>
 ### Fig1
 <img src="pics/CTCSS_Clock_period1.png" alt="Fig1">
 ### Fig2
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Data_pulse.png" alt="Fig2">
+<img src="pics/CTCSS_Data_pulse.png" alt="Fig2">
 ### Fig3
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Latch_after_last_clock.png" alt="Fig3">
+<img src="pics/CTCSS_Latch_after_last_clock.png" alt="Fig3">
 ### Fig4
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_latch_time.png" alt="Fig4">
+<img src="pics/CTCSS_latch_time.png" alt="Fig4">
 ### Fig5
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_latch_to_next_burst.png" alt="Fig5">
+<img src="pics/CTCSS_latch_to_next_burst.png" alt="Fig5">
