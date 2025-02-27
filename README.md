@@ -22,12 +22,12 @@ Latch after last clock pulse (Fig3) = 14.8 uSec.<BR>
 Latch time (Fig4) = 3.8 µSec.<BR>
 Latch to next bust of always 192 (Fig5) = 22.2 uSec.<BR>
 ### Fig1
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS Clock period1.png" alt="Fig1">
+<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Clock_period1.png" alt="Fig1">
 ### Fig2
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS Data pulse.png" alt="Fig2">
+<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Data_pulse.png" alt="Fig2">
 ### Fig3
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS Latch after last clock.png" alt="Fig3">
+<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Latch_after_last_clock.png" alt="Fig3">
 ### Fig4
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS latch time.png" alt="Fig4">
+<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_latch_time.png" alt="Fig4">
 ### Fig5
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS latch to next burst.png" alt="Fig5">
+<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_latch_to_next_burst.png" alt="Fig5">
