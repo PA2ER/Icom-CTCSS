@@ -16,18 +16,22 @@ PIN 11 = MOSI SPI DATA from transceiver<br>
 PIN 13 = SCK SPI clock serial clock for CK from transceiver<br>
 PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter<p>
 ## Serial data from transceiver
-Clock period (Fig1) = 4.4 uSec<BR>
-Data Pulse (Fig2) = 2.2 uSec.<BR>
-Latch after last clock pulse (Fig3) = 14.8 uSec.<BR>
-Latch time (Fig4) = 3.8 µSec.<BR>
-Latch to next bust of always 192 (Fig5) = 22.2 uSec.<BR>
-### Fig1
-<img src="pics/CTCSS_Clock_period1.png" alt="Fig1">
-### Fig2
-<img src="pics/CTCSS_Data_pulse.png" alt="Fig2">
-### Fig3
-<img src="pics/CTCSS_Latch_after_last_clock.png" alt="Fig3">
-### Fig4
-<img src="pics/CTCSS_latch_time.png" alt="Fig4">
-### Fig5
-<img src="pics/CTCSS_latch_to_next_burst.png" alt="Fig5">
+Clock period (Fig1) = 4.4 uSec<br>
+Data Pulse (Fig2) = 2.2 uSec.<br>
+Latch after last clock pulse (Fig3) = 14.8 uSec.<br>
+Latch time (Fig4) = 3.8 µSec.<br>
+Latch to next bust of always 192 (Fig5) = 22.2 uSec.<br>
+### Fig 1
+<img src="pics/CTCSS_Clock_period1.png" alt="Fig1"><br>
+
+### Fig 2
+<img src="pics/CTCSS_Data_pulse.png" alt="Fig2"><br>
+
+### Fig 3
+<img src="pics/CTCSS_Latch_after_last_clock.png" alt="Fig3"><br>
+
+### Fig 4
+<img src="pics/CTCSS_latch_time.png" alt="Fig4"><br>
+
+### Fig 5
+<img src="pics/CTCSS_latch_to_next_burst.png" alt="Fig5"><br>
