@@ -22,7 +22,7 @@ Latch after last clock pulse (Fig3) = 14.8 uSec.<BR>
 Latch time (Fig4) = 3.8 µSec.<BR>
 Latch to next bust of always 192 (Fig5) = 22.2 uSec.<BR>
 ### Fig1
-<img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Clock_period1.png" alt="Fig1">
+<img src="pics/CTCSS_Clock_period1.png" alt="Fig1">
 ### Fig2
 <img src="https://github.com/PA2ER/Icom-CTCSS/tree/main/pics/CTCSS_Data_pulse.png" alt="Fig2">
 ### Fig3
