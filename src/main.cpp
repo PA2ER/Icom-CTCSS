@@ -6,13 +6,18 @@ I found out that Icom, yaesu, and Kenwood, all use a 8 bit shift register IC, an
 I used the library written by PE1CID,that I slightly modified, to generate the sub-audio tone. (CtcssTone)
 
 Pins used:
-PIN 2 = PTT_BUTTON to switch from receive to transmit
+PIN 4 = PTT_BUTTON to switch from receive to transmit
 PIN 3 = PWM_OUTPUT output that generates the sub-audio tone
 PIN 8 = DECODE_INDICATOR goes high if CTCSS code is decoded
-PIN 10 = ChipSelect Input for TSTB from the transceiver
+PIN 2 = ChipSelect Input for TSTB from the transceiver
 PIN 11 = MOSI SPI DATA from transceiver
 PIN 13 = SCK SPI clock serial clock for CK from transceiver
 PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter
+
+selectedCode:
+Bit7 = PTT_on when low
+Bit6 = Tone_off when high
+Bit5-0 = CTCSS code
 */
 
 #include <Arduino.h>
@@ -22,13 +27,13 @@ PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter
 #include "CtcssTone.h"
 
 // Declare funtions:
-int readShiftRegister();
+void readShiftRegister();
 void generateSineWave(int frequency);
 bool decodeCTCSS(float targetFrequency);
 
 // PTT Button
-#define PTT_BUTTON 2  // Pin connected to the PTT button
-#define CS_PIN    4  // D10 = pin16 = PortB.4
+#define PTT_BUTTON 4  // Pin connected to the PTT button
+#define CS_PIN    2  // D10 = pin16 = PortB.4
 #define SCK_PIN   13  // D13 = pin19 = PortB.5
 #define MOSI_PIN  11  // D11 = pin17 = PortB.3
 
@@ -45,15 +50,16 @@ const float ctcssFrequencies[] = {
   , 203.5, 210.7, 218.1, 225.7, 233.6, 241.8, 250.3
 };
 
-/*const uint8_t ctcssCodes[] = {
-  0, 29, 28, 27, 26, 25, 24, 23, 22, 21, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42
-  , 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30
-};*/
-
 const uint8_t ctcssCodes[] = {
+  0, 29, 28, 27, 26, 25, 24, 23, 22, 21, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42
+  , 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30
+};
+
+/*const uint8_t ctcssCodes[] = {
   192, 157, 156, 155, 154, 153, 152, 151, 150, 149, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169
   , 168, 167, 166, 165, 164, 163, 162, 161, 160, 159, 158
 };
+*/
 
 // Initialize all bits to 0
 volatile byte shiftRegister = 0b00000000;
@@ -75,9 +81,14 @@ int code = 0;
 int prefCode = 0;
 int numCodes = sizeof(ctcssCodes) / sizeof(ctcssCodes[0]);
 
+// Variables for state tracking
+bool isWaitingForCSHigh = true;
+bool isWaitingForCSLow = false;
+bool isReadingData = false;
+
 void setup() {
   // Set SPI pins as input
-  pinMode(CS_PIN, INPUT_PULLUP);
+  pinMode(CS_PIN, INPUT);
   pinMode(SS, INPUT);
   pinMode(SCK_PIN, INPUT);
   pinMode(MOSI_PIN, INPUT);
@@ -86,6 +97,10 @@ void setup() {
   SPCR = (1<<SPE)|(0<<DORD)|(0<<MSTR)|(1<<CPOL)|(0<<CPHA)|(0<<SPR1)|(0<<SPR0); // SPI on
   SPCR |= _BV(SPIE); // Enable SPI interrupt
 
+  // Attach an interrupt to the clock pin (rising edge)
+  attachInterrupt(digitalPinToInterrupt(CS_PIN), readShiftRegister, RISING);
+
+  // Initialize Timer 1 for PWM output
   TCCR1A = _BV(COM1A1) | _BV(WGM10);  // Set PWM mode and output
   TCCR1B = _BV(CS12);  // Set prescaler to 1 (no prescaling)
 
@@ -109,11 +124,8 @@ void setup() {
 
 void loop() {
   prefCode = selectedCode;
-  // Read the serial input and get the selected CTCSS code from ctcssCodes array
-  selectedCode = readShiftRegister();
-
   // Check if the PTT button is pressed
-  if (digitalRead(PTT_BUTTON) == HIGH && selectedCode != 0 ) {  // PTT button is pressed - transmit selected CTCSS tone as a sine wave
+  if (digitalRead(PTT_BUTTON) == HIGH) {  // PTT button is pressed - transmit selected CTCSS tone as a sine wave
     digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator
     if (selectedCode == 0) {
       CtcssTone.tone_off();
@@ -134,38 +146,33 @@ void loop() {
       digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator if no code is selected
     }
   }
+  //currentState = WAIT_FOR_CS_HIGH;
 }
 
 // SPI interrupt service routine
 ISR(SPI_STC_vect) {
   // Read the received data from the SPI Data Register (SPDR)
   shiftRegister = SPDR;
-  delayMicroseconds(20);
-  /*//while (digitalRead(CS_PIN)==0) {} // wait until SlaveSelect goes High (active)
-  selectedCode = 0;
-    for (int i =0; i < numCodes; i++) {
-      if (shiftRegister == ctcssCodes[i]) {
-        selectedCode = i;
-        Serial.print("Code: ");
-        Serial.println(selectedCode, DEC);
-        while (digitalRead(CS_PIN)==1) {} // wait until SlaveSelect goes High (active)
-        break;
-      }
-    }*/
 }
 
-int readShiftRegister() {
-  while (digitalRead(SS)==1) {} // wait until SlaveSelect goes High (active)
+void readShiftRegister() {
+  if (bitRead(shiftRegister, 7) == 0) {
+    Serial.println("PTT Button pressed");
+  }
+  if (bitRead(shiftRegister, 6) == 0) {
+    Serial.println("Tone on");
+  }
+  
   int code = 0;
-    for (int i =0; i < numCodes; i++) {
-      if (shiftRegister == ctcssCodes[i]) {
-        code = i;
-        //Serial.print("Code: ");
-        //Serial.println(code, DEC);
-        break;
-      }
+  for (int i =0; i < numCodes; i++) {
+    if ((shiftRegister & 0b111111) == ctcssCodes[i]) {
+      code = i;
+      //Serial.print("Code: ");
+      //Serial.println(code, DEC);
+      break;
     }
-return code;  // Returns a frequentie value between 0 and 250.3 Hz
+  }
+  selectedCode = code;
 }
 
 void generateSineWave(int toneout) {
