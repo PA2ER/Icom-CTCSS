@@ -21,17 +21,17 @@ Data Pulse (Fig2) = 2.2 uSec.<br>
 Latch after last clock pulse (Fig3) = 14.8 uSec.<br>
 Latch time (Fig4) = 3.8 µSec.<br>
 Latch to next bust of always 192 (Fig5) = 22.2 uSec.<p>
-### Fig 1
+### Clock period (Fig1) = 4.4 uSec<br>
 <img src="pics/CTCSS_Clock_period1.png" alt="Fig1"><p>
 
-### Fig 2
+### Data Pulse (Fig2) = 2.2 uSec.<br>
 <img src="pics/CTCSS_Data_pulse.png" alt="Fig2"><p>
 
-### Fig 3
+### Latch after last clock pulse (Fig3) = 14.8 uSec.<br>
 <img src="pics/CTCSS_Latch_after_last_clock.png" alt="Fig3"><p>
 
-### Fig 4
+### Latch time (Fig4) = 3.8 µSec.<br>
 <img src="pics/CTCSS_latch_time.png" alt="Fig4"><p>
 
-### Fig 5
+### Latch to next bust of always 192 (Fig5) = 22.2 uSec.<br>
 <img src="pics/CTCSS_latch_to_next_burst.png" alt="Fig5"><p>
