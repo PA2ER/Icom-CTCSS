@@ -78,11 +78,12 @@ int numCodes = sizeof(ctcssCodes) / sizeof(ctcssCodes[0]);
 
 bool pttOn = false;
 bool toneOff = false;
+bool preftoneOff = false;
 
 void setup() {
   // Set SPI pins as input
   pinMode(CS_PIN, INPUT); //D2 Chip Select (TSTB) from transceiver
-  pinMode(SS, INPUT); //not used
+  pinMode(SS, INPUT); //not used connect to GND
   pinMode(SCK_PIN, INPUT); //D13 Serial Clock (CK) from transceiver
   pinMode(MOSI_PIN, INPUT); //D11 Master Out Slave In (DATA) from transceiver
 
@@ -120,6 +121,7 @@ void setup() {
 
 void loop() {
   prefCode = selectedCode;
+  preftoneOff = toneOff;
   // Check if the PTT button is pressed
   if (pttOn) {  // PTT button is pressed - transmit selected CTCSS tone as a sine wave
     digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator
@@ -127,14 +129,8 @@ void loop() {
     if (!toneOff) {
       CtcssTone.tone_off();
       digitalWrite(TONE_OFF_INDICATOR, HIGH);  // Turn on tone off indicator
-      Serial.println("Tone is off");
     } else {
       generateSineWave(selectedCode);
-      if (selectedCode != prefCode) {
-        digitalWrite(TONE_OFF_INDICATOR, LOW);  // Turn off tone off indicator
-        Serial.print("Transmitting CTCSS tone: ");
-        Serial.println(ctcssFrequencies[selectedCode]);
-      }
     } 
   } else {
     // PTT button is not pressed - start decode incoming audio
@@ -143,12 +139,11 @@ void loop() {
       bool isDecoded = decodeCTCSS(ctcssFrequencies[selectedCode]);
       digitalWrite(TONE_OFF_INDICATOR, LOW);  // Turn off tone off indicator
       digitalWrite(DECODE_INDICATOR, isDecoded ? HIGH : LOW);  // Turn on/off decode indicator
-    } else {
+   } else {
       digitalWrite(TONE_OFF_INDICATOR, HIGH);  // Turn on tone off indicator
       digitalWrite(DECODE_INDICATOR, LOW);  // Turn off decode indicator if no code is selected
     }
   }
-  //currentState = WAIT_FOR_CS_HIGH;
 }
 
 // SPI interrupt service routine, reads 8 bit data from the shift register store in shiftRegister
@@ -157,31 +152,37 @@ ISR(SPI_STC_vect) {
   shiftRegister = SPDR;
 }
 
-// Read the shift register and update the selected CTCSS code, and PTT and tone status
+// Read the shift register and update the selected CTCSS code,  PTT and tone status
 void readShiftRegister() {
   if (bitRead(shiftRegister, 7) == 0) { //if PTT button is pressed switch boolean pttOn
     pttOn = true;
-    Serial.println("PTT Button pressed");
+    //Serial.println("PTT Button pressed");
   }
   else {
     pttOn = false;
   }
   if (bitRead(shiftRegister, 6) == 0) { //if T-Sql is off switch boolean toneOff
     toneOff = false;
-    Serial.println("Tone on");
+    //Serial.println("Tone on");
     CtcssTone.prev_tone_on();
   }
   else {
     toneOff = true;
-    Serial.println("Tone off");
+    //Serial.println("Tone off");
     CtcssTone.tone_off();
   }
   int code = 0;
   for (int i =0; i < numCodes; i++) {
     if ((shiftRegister & 0b111111) == ctcssCodes[i]) {
       code = i;
-      Serial.print("Code: ");
-      Serial.println(shiftRegister & 0b111111, DEC);
+      if (i == 0) {
+        Serial.println("Tone off");
+      }
+      else {
+      Serial.print("CTCSS: ");
+      Serial.print(ctcssFrequencies[i]);
+      Serial.println(" Hz");
+      }
       break;
     }
   }
