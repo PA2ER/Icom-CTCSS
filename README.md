@@ -35,3 +35,5 @@ Latch to next bust of always 192 (Fig5) = 22.2 uSec.<p>
 
 ### Latch to next bust of always 192 (Fig5) = 22.2 uSec.<br>
 <img src="pics/CTCSS_latch_to_next_burst.png" alt="Fig5"><p>
+## Basic Schema<br>
+<img src="pics/CTCSS_Schema.png" alt="Basic Schema"><p>
