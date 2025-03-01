@@ -6,19 +6,33 @@ I found out that Icom, yaesu, and Kenwood, all use a 8 bit shift register IC, an
 I used the library written by PE1CID,that I slightly modified, to generate the sub-audio tone. (CtcssTone)
 
 Pins used:
-PIN 2 = ChipSelect Input for TSTB from the transceiver
-PIN 3 = PWM_OUTPUT output that generates the sub-audio tone
+PIN 2 = ChipSelect Input for TSTB (P47-3) from the transceiver
+PIN 3 = PWM_OUTPUT output that generates the sub-audio tone, via filter network to TSTN (P46-5) to the transceiver
 PIN 4 = PTT_INDICATOR output indicator with led -for testing purposes
 PIN 5 = TONE_OFF_INDICATOR output indicator with led for testing purposes
 PIN 8 = DECODE_INDICATOR goes high if CTCSS code is decoded
-PIN 11 = MOSI SPI DATA from transceiver
-PIN 13 = SCK SPI clock serial clock for CK from transceiver
+PIN 11 = MOSI SPI DATA (P47-4) from transceiver
+PIN 13 = SCK SPI clock serial clock for CK (P47-5) from transceiver
 PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter
+
+Transceiver conectors:
+P47-1 = 5V
+P47-2 = GND
+P47-3 = TSTB (Chip Select) to D2
+P47-4 = DATA (MOSI) to D11
+P47-5 = CK (SCK) to D13
+
+P46-1 = TSFL Squelch control
+P46-2 = AFMT AF mute
+P46-3 = TSAO Receive OUTPUT
+P46-4 = GND
+P46-5 = TSTN Transmit Input to D3 via filter network
+P46-6 = GND
 
 selectedCode:
 Bit7 = PTT_on when low
 Bit6 = Tone_off when high
-Bit5-0 = CTCSS code
+Bit5-0 = ctcssCodes[]
 */
 
 #include <Arduino.h>

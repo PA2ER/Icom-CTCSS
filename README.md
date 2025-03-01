@@ -7,14 +7,27 @@ I found out that Icom, yaesu, and Kenwood, all use a 8 bit shift register IC, an
 ## acknowledgment
 I used the library written by PE1CID,that I slightly modified, to generate the sub-audio tone. (CtcssTone)</p>
 ## Pins used:<br>
-PIN 2 = ChipSelect Input for TSTB from the transceiver<br>
-PIN 3 = PWM_OUTPUT output that generates the sub-audio tone<br>
+PIN 2 = ChipSelect Input for TSTB (P47-3) from the transceiver<br>
+PIN 3 = PWM_OUTPUT output that generates the sub-audio tone, via filter network to TSTN (P46-5) to the transceiver<br>
 PIN 4 = PTT_INDICATOR output indicator with led -for testing purposes<br>
 PIN 5 = TONE_OFF_INDICATOR output indicator with led for testing purposes<br>
 PIN 8 = DECODE_INDICATOR goes high if CTCSS code is decoded<br>
-PIN 11 = MOSI SPI DATA from transceiver<br>
-PIN 13 = SCK SPI clock serial clock for CK from transceiver<br>
+PIN 11 = MOSI SPI DATA (P47-4) from transceiver<br>
+PIN 13 = SCK SPI clock serial clock for CK (P47-5) from transceiver<br>
 PIN 14 = A0 Sub-audio tone input, needs 260Hz lowpass filter<p>
+## Transceiver conections:
+P47-1 = 5V<br>
+P47-2 = GND<br>
+P47-3 = TSTB (Chip Select) to D2<br>
+P47-4 = DATA (MOSI) to D11<br>
+P47-5 = CK (SCK) to D13<p>
+
+P46-1 = TSFL Squelch control<br>
+P46-2 = AFMT AF mute<br>
+P46-3 = TSAO Receive OUTPUT<br>
+P46-4 = GND<br>
+P46-5 = TSTN Transmit Input to D3 via filter network<br>
+P46-6 = GND<p>
 ## Serial data from transceiver
 Clock period (Fig1) = 4.4 uSec<br>
 Data Pulse (Fig2) = 2.2 uSec.<br>
