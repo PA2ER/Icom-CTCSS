@@ -50,3 +50,6 @@ Latch to next bust of always 192 (Fig5) = 22.2 uSec.<p>
 <img src="pics/CTCSS_latch_to_next_burst.png" alt="Fig5"><p>
 ## Basic Schema<br>
 <img src="pics/CTCSS_Schema.png" alt="Basic Schema"><p>
+## UT34-Board<br>
+<img src="pics/CTCSS_Board.png" alt="Basic Board"><p>
+
