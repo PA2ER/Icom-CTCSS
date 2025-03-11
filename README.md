@@ -29,6 +29,9 @@ P46-4 = GND<br>
 P46-5 = TSTN Transmit Input to D3 via filter network<br>
 P46-6 = GND<p>
 ## Serial data from transceiver
+Channel 1 = Yellow = Data<br>
+Channel 2 = Purple = Clock<br>
+Channel 3 = Blue = ChipSelect (CS)<p>
 Clock period (Fig1) = 4.4 uSec<br>
 Data Pulse (Fig2) = 2.2 uSec.<br>
 Latch after last clock pulse (Fig3) = 14.8 uSec.<br>
