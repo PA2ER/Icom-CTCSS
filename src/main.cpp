@@ -105,7 +105,7 @@ void setup() {
   SPCR = (1<<SPE)|(0<<DORD)|(0<<MSTR)|(1<<CPOL)|(0<<CPHA)|(0<<SPR1)|(0<<SPR0); // SPI on
   SPCR |= _BV(SPIE); // Enable SPI interrupt
 
-  // Attach an interrupt to the clock pin (rising edge)
+  // Attach an interrupt to the CS pin (rising edge)
   attachInterrupt(digitalPinToInterrupt(CS_PIN), readShiftRegister, RISING);
 
   // Initialize Timer 1 for PWM output
